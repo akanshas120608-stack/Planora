@@ -169,12 +169,28 @@
             </div>
         </div>
     </footer>
-
-    <!-- Scripts -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-    <script src="app.js"></script>
+<script>
+  // TEMPORARY: Firebase config in HTML
+  console.log("Using inline Firebase config...");
+  
+  const firebaseConfig = {
+    apiKey: "AIzaSyDovLKo3djdRbs963vqKdbj-geRWyzMTrg",
+    authDomain: "planora-86835.firebaseapp.com",
+    projectId: "planora-86835",
+    storageBucket: "planora-86835.appspot.com",
+    messagingSenderId: "971834924900",
+    appId: "1:971834924900:web:abc123def456"
+  };
+  
+  try {
+    const app = firebase.initializeApp(firebaseConfig);
+    window.auth = firebase.auth();
+    window.db = firebase.database();
+    console.log("✅ Inline init SUCCESS!");
+  } catch (e) {
+    console.error("❌ Inline init error:", e);
+  }
+</script>
 </body>
+ </html>
 
-</html>
