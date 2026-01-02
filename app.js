@@ -1,10 +1,10 @@
-// ===== GLOBAL VARIABLES =====
+// ==== GLOBAL VARIABLES ====
 let currentDate = new Date();
-let currentYear = currentDate.getFullYear();
 let currentMonth = currentDate.getMonth();
-let selectedDate = new Date(currentYear, currentMonth, currentDate.getDate());
+let currentYear = currentDate.getFullYear();
+let selectedDate = currentDate;
 
-// Demo data for testing
+// Demo data for testing (will be replaced with Firebase data later)
 let subjects = [
     { id: 1, name: 'Physics', color: '#4a6fa5' },
     { id: 2, name: 'Chemistry', color: '#e74c3c' },
@@ -41,42 +41,34 @@ let quotes = [
     "Don't watch the clock; do what it does. Keep going."
 ];
 
-// ===== DOM ELEMENTS =====
+// ==== DOM ELEMENTS ====
 const dateGrid = document.getElementById('date-grid');
 const daysContainer = document.getElementById('days-container');
 const currentMonthEl = document.getElementById('current-month');
 const dateRangeEl = document.getElementById('date-range');
 const prevMonthBtn = document.getElementById('prev-month');
 const nextMonthBtn = document.getElementById('next-month');
-const loginBtn = document.getElementById('login-btn');
-const logoutBtn = document.getElementById('logout-btn');
-const loginPrompt = document.getElementById('login-prompt');
-const userInfo = document.getElementById('user-info');
-const waitlistBtn = document.getElementById('waitlist-btn');
-const waitlistModal = document.getElementById('waitlist-modal');
-const joinWaitlistBtn = document.getElementById('join-waitlist-btn');
-const waitlistEmail = document.getElementById('waitlist-email');
 
-// ===== INITIALIZE APP =====
+// ==== INITIALIZE APP ====
 function initApp() {
     updateCalendar();
     setupEventListeners();
     console.log('Planora initialized successfully!');
 }
 
-// ===== CALENDAR FUNCTIONS =====
+// ==== CALENDAR FUNCTIONS ====
 function updateCalendar() {
     // Update month display
     const monthName = getMonthName(currentMonth);
     currentMonthEl.textContent = `${monthName} ${currentYear}`;
-    
+
     // Update date range
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
     dateRangeEl.textContent = `${monthName.substring(0, 3)} 01 - ${monthName.substring(0, 3)} ${daysInMonth}`;
-    
+
     // Generate date grid
     generateDateGrid();
-    
+
     // Generate days view
     generateDaysView();
 }
@@ -84,33 +76,33 @@ function updateCalendar() {
 function generateDateGrid() {
     dateGrid.innerHTML = '';
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(currentYear, currentMonth, day);
         const weekday = getWeekdayName(date.getDay());
-        
+
         const dateCell = document.createElement('div');
         dateCell.className = 'date-cell';
         dateCell.dataset.day = day;
-        
+
         // Check if this is today
         const today = new Date();
-        if (currentYear === today.getFullYear() && 
-            currentMonth === today.getMonth() && 
+        if (currentYear === today.getFullYear() &&
+            currentMonth === today.getMonth() &&
             day === today.getDate()) {
             dateCell.classList.add('active');
         }
-        
+
         dateCell.innerHTML = `
             <div class="date-day">${String(day).padStart(2, '0')}</div>
             <div class="date-weekday">${weekday.substring(0, 3)}</div>
         `;
-        
+
         // Add click event
         dateCell.addEventListener('click', () => {
             selectDate(new Date(currentYear, currentMonth, day));
         });
-        
+
         dateGrid.appendChild(dateCell);
     }
 }
@@ -118,7 +110,7 @@ function generateDateGrid() {
 function generateDaysView() {
     daysContainer.innerHTML = '';
     const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-    
+
     for (let day = 1; day <= daysInMonth; day++) {
         const date = new Date(currentYear, currentMonth, day);
         const dayCard = createDayCard(date, day);
@@ -130,13 +122,12 @@ function createDayCard(date, dayNumber) {
     const dayName = getWeekdayName(date.getDay());
     const monthName = getMonthName(currentMonth);
     const dateKey = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(dayNumber).padStart(2, '0')}`;
-    
+
     // Get quote for this day
     const quoteIndex = dayNumber % quotes.length;
-    
+
     // Get tasks for this day
     const dayTasks = tasks[dateKey] || [];
-    
     // Group tasks by subject
     const tasksBySubject = {};
     dayTasks.forEach(task => {
@@ -145,51 +136,48 @@ function createDayCard(date, dayNumber) {
         }
         tasksBySubject[task.subjectId].push(task);
     });
-    
+
     const dayCard = document.createElement('div');
     dayCard.className = 'day-card';
     dayCard.dataset.date = dateKey;
-    
+
     // Create subjects HTML
     let subjectsHTML = '';
     subjects.forEach(subject => {
         const subjectTasks = tasksBySubject[subject.id] || [];
-        
         if (subjectTasks.length > 0) {
             let tasksHTML = '';
             subjectTasks.forEach(task => {
                 tasksHTML += `
-                    <li class="task-item ${task.completed ? 'task-completed' : ''}">
-                        <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} 
-                               data-task-id="${task.id}">
-                        <input type="text" class="task-text" value="${task.text}" 
-                               data-task-id="${task.id}">
-                        <button class="delete-task" data-task-id="${task.id}">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </li>
+                <li class="task-item ${task.completed ? 'task-completed' : ''}">
+                    <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''} data-task-id="${task.id}">
+                    <input type="text" class="task-text" value="${task.text}" data-task-id="${task.id}">
+                    <button class="delete-task" data-task-id="${task.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </li>
                 `;
             });
-            
+
             subjectsHTML += `
-                <div class="subject-item">
-                    <div class="subject-header">
-                        <div class="subject-title">
-                            <div class="subject-color" style="background-color: ${subject.color}"></div>
-                            ${subject.name}
-                        </div>
+            <div class="subject-item">
+                <div class="subject-header">
+                    <div class="subject-title">
+                        <div class="subject-color" style="background-color: ${subject.color}"></div>
+                        ${subject.name}
                     </div>
-                    <ul class="task-list">
-                        ${tasksHTML}
-                    </ul>
-                    <button class="add-task-btn" data-subject-id="${subject.id}">
-                        <i class="fas fa-plus"></i> Add Task
-                    </button>
                 </div>
+                <ul class="task-list">
+                    ${tasksHTML}
+                </ul>
+                <button class="add-task-btn" data-subject-id="${subject.id}">
+                    <i class="fas fa-plus"></i> Add Task
+                </button>
+            </div>
             `;
         }
     });
-    
+
     dayCard.innerHTML = `
         <div class="day-header">
             <div class="day-title">${dayName}</div>
@@ -203,13 +191,13 @@ function createDayCard(date, dayNumber) {
             <i class="fas fa-plus"></i> Add New Subject
         </button>
     `;
-    
+
     return dayCard;
 }
 
 function selectDate(date) {
     selectedDate = date;
-    
+
     // Update active date in grid
     document.querySelectorAll('.date-cell').forEach(cell => {
         cell.classList.remove('active');
@@ -217,7 +205,7 @@ function selectDate(date) {
             cell.classList.add('active');
         }
     });
-    
+
     // Scroll to the selected day
     const dayCard = document.querySelector(`.day-card[data-date="${getDateKey(date)}"]`);
     if (dayCard) {
@@ -225,7 +213,7 @@ function selectDate(date) {
     }
 }
 
-// ===== EVENT LISTENERS =====
+// ==== EVENT LISTENERS ====
 function setupEventListeners() {
     // Month navigation
     prevMonthBtn.addEventListener('click', () => {
@@ -236,7 +224,7 @@ function setupEventListeners() {
         }
         updateCalendar();
     });
-    
+
     nextMonthBtn.addEventListener('click', () => {
         currentMonth++;
         if (currentMonth > 11) {
@@ -245,43 +233,38 @@ function setupEventListeners() {
         }
         updateCalendar();
     });
-    
-    // Login/Logout (demo for now)
-    loginBtn.addEventListener('click', () => {
-        // Demo login - will replace with Firebase later
-        loginPrompt.classList.add('hidden');
-        userInfo.classList.remove('hidden');
-        document.getElementById('username').textContent = 'Demo User';
-    });
-    
-    logoutBtn.addEventListener('click', () => {
-        userInfo.classList.add('hidden');
-        loginPrompt.classList.remove('hidden');
-    });
-    
-    // Waitlist
-    waitlistBtn.addEventListener('click', () => {
-        waitlistModal.classList.add('active');
-    });
-    
-    joinWaitlistBtn.addEventListener('click', () => {
-        const email = waitlistEmail.value.trim();
-        if (email && validateEmail(email)) {
-            alert(`Thank you! We'll notify you at ${email} when Planora Premium launches.`);
-            waitlistModal.classList.remove('active');
-            waitlistEmail.value = '';
-        } else {
-            alert('Please enter a valid email address.');
-        }
-    });
-    
+
+    // Waitlist button
+    const waitlistBtn = document.getElementById('waitlist-btn');
+    const joinWaitlistBtn = document.getElementById('join-waitlist-btn');
+    const waitlistEmail = document.getElementById('waitlist-email');
+
+    if (waitlistBtn) {
+        waitlistBtn.addEventListener('click', () => {
+            document.getElementById('waitlist-modal').classList.add('active');
+        });
+    }
+
+    if (joinWaitlistBtn && waitlistEmail) {
+        joinWaitlistBtn.addEventListener('click', () => {
+            const email = waitlistEmail.value.trim();
+            if (email && validateEmail(email)) {
+                alert(`Thank you! We'll notify you at ${email} when Planora Premium launches.`);
+                document.getElementById('waitlist-modal').classList.remove('active');
+                waitlistEmail.value = "";
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        });
+    }
+
     // Close modals when clicking X
     document.querySelectorAll('.modal-close').forEach(btn => {
         btn.addEventListener('click', function() {
             this.closest('.modal').classList.remove('active');
         });
     });
-    
+
     // Close modals when clicking outside
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
@@ -292,10 +275,10 @@ function setupEventListeners() {
     });
 }
 
-// ===== HELPER FUNCTIONS =====
+// ==== HELPER FUNCTIONS ====
 function getMonthName(monthIndex) {
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 
-                   'July', 'August', 'September', 'October', 'November', 'December'];
+    const months = ['January', 'February', 'March', 'April', 'May', 'June',
+        'July', 'August', 'September', 'October', 'November', 'December'];
     return months[monthIndex];
 }
 
@@ -316,5 +299,8 @@ function validateEmail(email) {
     return re.test(email);
 }
 
-// ===== INITIALIZE WHEN PAGE LOADS =====
-document.addEventListener('DOMContentLoaded', initApp);
+// ==== INITIALIZE WHEN PAGE LOADS ====
+// Note: Auth system handles DOMContentLoaded, so we don't need it here
+// Just make sure initApp is called by auth system
+
+console.log("Planora calendar system loaded!");
