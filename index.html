@@ -271,14 +271,14 @@
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyDovLKo3djdRbs963vqKdbj-geRWyzMTrg",
-            authDomain: "planora-86835.firebaseapp.com",
-            projectId: "planora-86835",
-            storageBucket: "planora-86835.appspot.com",
-            messagingSenderId: "971834924900",
-            appId: "1:971834924900:web:ff3d82595e08839130e471"  // Use your actual appId!
-        };
-
+    apiKey: "AIzaSyDovLKo3djdRbs963vqKdbj-geRWyzMTrg",
+    authDomain: "planora-86835.firebaseapp.com",
+    databaseURL: "https://planora-86835-default-rtdb.firebasedatabase.app", // ← CHANGE THIS
+    projectId: "planora-86835",
+    storageBucket: "planora-86835.appspot.com",
+    messagingSenderId: "971834924900",
+    appId: "1:971834924900:web:ff3d82595e08839130e471"
+};
         // Initialize Firebase
         try {
             const app = firebase.initializeApp(firebaseConfig);
