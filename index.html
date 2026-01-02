@@ -592,13 +592,24 @@
             initApp();
         }
     });
+        // ... [your existing code] ...
     
+    // ===== MAKE FUNCTIONS GLOBALLY AVAILABLE =====
+    window.signUpDirect = signUpDirect;
+    window.loginDirect = loginDirect;
+    window.currentUser = currentUser;
+    window.showUserInfo = showUserInfo;
+    window.showLoginPrompt = showLoginPrompt;
+    
+    console.log("✅ Global functions exported!");
+    console.log("✅ DIRECT Authentication system ready!");
     console.log("✅ DIRECT Authentication system ready!");
 </script>
     <!-- Your App Code -->
     <script src="app.js"></script>
 </body>
 </html>
+
 
 
 
