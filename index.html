@@ -215,6 +215,8 @@
             <div class="form-options">
                 <a href="#" class="forgot-password" id="forgot-password">Forgot password?</a>
             </div>
+             <div id="login-error" class="hidden"></div>
+
             <button class="btn-primary" id="login-submit-btn">
                 <i class="fas fa-spinner fa-spin hidden" id="login-spinner"></i>
                 <span id="login-text">Login</span>
@@ -249,6 +251,8 @@
             <div class="password-requirements">
                 <small>Password must be at least 6 characters long</small>
             </div>
+            <div id="signup-error" class="hidden"></div>
+
             <button class="btn-primary" id="signup-submit-btn">
                 <i class="fas fa-spinner fa-spin hidden" id="signup-spinner"></i>
                 <span id="signup-text">Create Account</span>
@@ -273,6 +277,8 @@
                 <label for="forgot-email">Email</label>
                 <input type="email" id="forgot-email" placeholder="you@example.com">
             </div>
+         <div id="forgot-error" class="hidden"></div>
+         <div id="forgot-success" class="hidden"></div>
             <button class="btn-primary" id="forgot-submit-btn">
                 <i class="fas fa-spinner fa-spin hidden" id="forgot-spinner"></i>
                 <span id="forgot-text">Send Reset Link</span>
@@ -285,7 +291,4 @@
 </div>
 </body>
  </html>
-
-
-
 
