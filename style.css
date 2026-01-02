@@ -724,4 +724,106 @@ body {
         flex-direction: column;
         gap: 15px;
     }
+
+}
+/* === AUTHENTICATION STYLES === */
+.auth-switch {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 15px;
+    border-top: 1px solid #eee;
+}
+
+.auth-switch a {
+    color: #4a6fa5;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.form-options {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 15px;
+}
+
+.forgot-password {
+    color: #4a6fa5;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.password-requirements {
+    color: #7f8c8d;
+    font-size: 13px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* Loading spinner */
+.fa-spinner {
+    margin-right: 8px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Error messages */
+.error-message {
+    background: #ffeaea;
+    color: #e74c3c;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border-left: 4px solid #e74c3c;
+    font-size: 14px;
+}
+
+.success-message {
+    background: #e8f6f3;
+    color: #27ae60;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    border-left: 4px solid #27ae60;
+    font-size: 14px;
+}
+
+/* User info in header */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+#username {
+    font-weight: 600;
+    color: white;
+}
+
+.logout-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.logout-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
