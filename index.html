@@ -154,6 +154,98 @@
         </div>
     </div>
 
+    <!-- Login Modal -->
+    <div class="modal hidden" id="login-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-sign-in-alt"></i> Login to Planora</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="Enter your password">
+                </div>
+                <div class="form-options">
+                    <a href="#" class="forgot-password" id="forgot-password">Forgot password?</a>
+                </div>
+                <div id="login-error" class="hidden"></div>
+                <button class="btn-primary" id="login-submit-btn">
+                    <i class="fas fa-spinner fa-spin hidden" id="login-spinner"></i>
+                    <span id="login-text">Login</span>
+                </button>
+                <div class="auth-switch">
+                    <p>Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal hidden" id="signup-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-user-plus"></i> Create Account</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password</label>
+                    <input type="password" id="signup-password" placeholder="Create a password (min. 6 characters)">
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm">Confirm Password</label>
+                    <input type="password" id="signup-confirm" placeholder="Confirm your password">
+                </div>
+                <div class="password-requirements">
+                    <small>Password must be at least 6 characters long</small>
+                </div>
+                <div id="signup-error" class="hidden"></div>
+                <button class="btn-primary" id="signup-submit-btn">
+                    <i class="fas fa-spinner fa-spin hidden" id="signup-spinner"></i>
+                    <span id="signup-text">Create Account</span>
+                </button>
+                <div class="auth-switch">
+                    <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot Password Modal -->
+    <div class="modal hidden" id="forgot-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-key"></i> Reset Password</h3>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Enter your email address and we'll send you a link to reset your password.</p>
+                <div class="form-group">
+                    <label for="forgot-email">Email</label>
+                    <input type="email" id="forgot-email" placeholder="you@example.com">
+                </div>
+                <div id="forgot-error" class="hidden"></div>
+                <div id="forgot-success" class="hidden"></div>
+                <button class="btn-primary" id="forgot-submit-btn">
+                    <i class="fas fa-spinner fa-spin hidden" id="forgot-spinner"></i>
+                    <span id="forgot-text">Send Reset Link</span>
+                </button>
+                <div class="auth-switch">
+                    <p>Remember your password? <a href="#" id="switch-to-login-from-forgot">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer class="main-footer">
         <div class="footer-content">
@@ -169,126 +261,380 @@
             </div>
         </div>
     </footer>
-     <!-- ⬇️⬇️⬇️ ADD THESE 3 LINES HERE ⬇️⬇️⬇️ -->
+
+    <!-- Firebase Scripts -->
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-database-compat.js"></script>
-<script>
-  // TEMPORARY: Firebase config in HTML
-  console.log("Using inline Firebase config...");
-  
-  const firebaseConfig = {
-    apiKey: "AIzaSyDovLKo3djdRbs963vqKdbj-geRWyzMTrg",
-    authDomain: "planora-86835.firebaseapp.com",
-    projectId: "planora-86835",
-    storageBucket: "planora-86835.appspot.com",
-    messagingSenderId: "971834924900",
-    appId: "1:971834924900:web:ff3d82595e08839130e471"
-  };
-  
-  try {
-    const app = firebase.initializeApp(firebaseConfig);
-    window.auth = firebase.auth();
-    window.db = firebase.database();
-    console.log("✅ Inline init SUCCESS!");
-  } catch (e) {
-    console.error("❌ Inline init error:", e);
-  }
-</script>
-<script src="app.js"></script>
-<!-- Login Modal -->
-<div class="modal hidden" id="login-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-sign-in-alt"></i> Login to Planora</h3>
-            <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="login-email">Email</label>
-                <input type="email" id="login-email" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-                <label for="login-password">Password</label>
-                <input type="password" id="login-password" placeholder="Enter your password">
-            </div>
-            <div class="form-options">
-                <a href="#" class="forgot-password" id="forgot-password">Forgot password?</a>
-            </div>
-             <div id="login-error" class="hidden"></div>
 
-            <button class="btn-primary" id="login-submit-btn">
-                <i class="fas fa-spinner fa-spin hidden" id="login-spinner"></i>
-                <span id="login-text">Login</span>
-            </button>
-            <div class="auth-switch">
-                <p>Don't have an account? <a href="#" id="switch-to-signup">Sign up</a></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- Firebase Configuration -->
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDovLKo3djdRbs963vqKdbj-geRWyzMTrg",
+            authDomain: "planora-86835.firebaseapp.com",
+            projectId: "planora-86835",
+            storageBucket: "planora-86835.appspot.com",
+            messagingSenderId: "971834924900",
+            appId: "1:971834924900:web:ff3d82595e08839130e471"  // Use your actual appId!
+        };
 
-<!-- Sign Up Modal -->
-<div class="modal hidden" id="signup-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-user-plus"></i> Create Account</h3>
-            <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="form-group">
-                <label for="signup-email">Email</label>
-                <input type="email" id="signup-email" placeholder="you@example.com">
-            </div>
-            <div class="form-group">
-                <label for="signup-password">Password</label>
-                <input type="password" id="signup-password" placeholder="Create a password (min. 6 characters)">
-            </div>
-            <div class="form-group">
-                <label for="signup-confirm">Confirm Password</label>
-                <input type="password" id="signup-confirm" placeholder="Confirm your password">
-            </div>
-            <div class="password-requirements">
-                <small>Password must be at least 6 characters long</small>
-            </div>
-            <div id="signup-error" class="hidden"></div>
+        // Initialize Firebase
+        try {
+            const app = firebase.initializeApp(firebaseConfig);
+            window.auth = firebase.auth();
+            window.db = firebase.database();
+            console.log("✅ Firebase initialized successfully!");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+        }
+    </script>
 
-            <button class="btn-primary" id="signup-submit-btn">
-                <i class="fas fa-spinner fa-spin hidden" id="signup-spinner"></i>
-                <span id="signup-text">Create Account</span>
-            </button>
-            <div class="auth-switch">
-                <p>Already have an account? <a href="#" id="switch-to-login">Login</a></p>
-            </div>
-        </div>
-    </div>
-</div>
+    <!-- Authentication System -->
+    <script>
+        // ===== AUTHENTICATION STATE LISTENER =====
+        auth.onAuthStateChanged((user) => {
+            console.log("Auth state changed:", user ? user.email : "No user");
+            
+            if (user) {
+                // User is signed in
+                showUserInfo(user);
+                loadUserData(user.uid);
+            } else {
+                // User is signed out
+                showLoginPrompt();
+                clearUserData();
+            }
+        });
 
-<!-- Forgot Password Modal -->
-<div class="modal hidden" id="forgot-modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-key"></i> Reset Password</h3>
-            <button class="modal-close">&times;</button>
-        </div>
-        <div class="modal-body">
-            <p>Enter your email address and we'll send you a link to reset your password.</p>
-            <div class="form-group">
-                <label for="forgot-email">Email</label>
-                <input type="email" id="forgot-email" placeholder="you@example.com">
-            </div>
-         <div id="forgot-error" class="hidden"></div>
-         <div id="forgot-success" class="hidden"></div>
-            <button class="btn-primary" id="forgot-submit-btn">
-                <i class="fas fa-spinner fa-spin hidden" id="forgot-spinner"></i>
-                <span id="forgot-text">Send Reset Link</span>
-            </button>
-            <div class="auth-switch">
-                <p>Remember your password? <a href="#" id="switch-to-login-from-forgot">Login</a></p>
-            </div>
-        </div>
-    </div>
-</div>
+        // ===== UI UPDATE FUNCTIONS =====
+        function showUserInfo(user) {
+            document.getElementById('login-prompt').classList.add('hidden');
+            document.getElementById('user-info').classList.remove('hidden');
+            document.getElementById('username').textContent = user.email.split('@')[0];
+            
+            // Close any open auth modals
+            closeAllModals();
+        }
+
+        function showLoginPrompt() {
+            document.getElementById('user-info').classList.add('hidden');
+            document.getElementById('login-prompt').classList.remove('hidden');
+        }
+
+        function closeAllModals() {
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.classList.remove('active');
+            });
+        }
+
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="error-message">${message}</div>`;
+            element.classList.remove('hidden');
+            
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 5000);
+        }
+
+        function showSuccess(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.innerHTML = `<div class="success-message">${message}</div>`;
+            element.classList.remove('hidden');
+            
+            setTimeout(() => {
+                element.classList.add('hidden');
+            }, 3000);
+        }
+
+        function showLoading(buttonId, spinnerId, textId) {
+            document.getElementById(spinnerId).classList.remove('hidden');
+            document.getElementById(textId).textContent = 'Processing...';
+            document.getElementById(buttonId).disabled = true;
+        }
+
+        function hideLoading(buttonId, spinnerId, textId, originalText) {
+            document.getElementById(spinnerId).classList.add('hidden');
+            document.getElementById(textId).textContent = originalText;
+            document.getElementById(buttonId).disabled = false;
+        }
+
+        // ===== SIGN UP FUNCTION =====
+        async function signUp(email, password, confirmPassword) {
+            if (!email || !password || !confirmPassword) {
+                throw new Error('Please fill in all fields');
+            }
+            
+            if (password.length < 6) {
+                throw new Error('Password must be at least 6 characters long');
+            }
+            
+            if (password !== confirmPassword) {
+                throw new Error('Passwords do not match');
+            }
+            
+            if (!validateEmail(email)) {
+                throw new Error('Please enter a valid email address');
+            }
+            
+            try {
+                const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+                console.log("User created:", userCredential.user.email);
+                
+                await db.ref('users/' + userCredential.user.uid).set({
+                    email: email,
+                    createdAt: new Date().toISOString(),
+                    plan: 'free'
+                });
+                
+                return userCredential.user;
+            } catch (error) {
+                console.error("Sign up error:", error);
+                
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        throw new Error('This email is already registered. Try logging in instead.');
+                    case 'auth/invalid-email':
+                        throw new Error('Please enter a valid email address.');
+                    case 'auth/weak-password':
+                        throw new Error('Password is too weak. Please choose a stronger password.');
+                    default:
+                        throw new Error('Sign up failed. Please try again.');
+                }
+            }
+        }
+
+        // ===== LOGIN FUNCTION =====
+        async function login(email, password) {
+            if (!email || !password) {
+                throw new Error('Please fill in all fields');
+            }
+            
+            if (!validateEmail(email)) {
+                throw new Error('Please enter a valid email address');
+            }
+            
+            try {
+                const userCredential = await auth.signInWithEmailAndPassword(email, password);
+                console.log("User logged in:", userCredential.user.email);
+                return userCredential.user;
+            } catch (error) {
+                console.error("Login error:", error);
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        throw new Error('No account found with this email.');
+                    case 'auth/wrong-password':
+                        throw new Error('Incorrect password. Please try again.');
+                    case 'auth/invalid-email':
+                        throw new Error('Please enter a valid email address.');
+                    case 'auth/user-disabled':
+                        throw new Error('This account has been disabled.');
+                    default:
+                        throw new Error('Login failed. Please check your credentials.');
+                }
+            }
+        }
+
+        // ===== LOGOUT FUNCTION =====
+        function logout() {
+            auth.signOut().then(() => {
+                console.log("User signed out successfully");
+            }).catch((error) => {
+                console.error("Logout error:", error);
+                alert('Logout failed. Please try again.');
+            });
+        }
+
+        // ===== FORGOT PASSWORD FUNCTION =====
+        async function forgotPassword(email) {
+            if (!email) {
+                throw new Error('Please enter your email address');
+            }
+            
+            if (!validateEmail(email)) {
+                throw new Error('Please enter a valid email address');
+            }
+            
+            try {
+                await auth.sendPasswordResetEmail(email);
+                return true;
+            } catch (error) {
+                console.error("Forgot password error:", error);
+                
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        throw new Error('No account found with this email.');
+                    case 'auth/invalid-email':
+                        throw new Error('Please enter a valid email address.');
+                    default:
+                        throw new Error('Failed to send reset email. Please try again.');
+                }
+            }
+        }
+
+        // ===== USER DATA FUNCTIONS =====
+        function loadUserData(userId) {
+            console.log("Loading data for user:", userId);
+            
+            // Will be implemented later
+            // db.ref('users/' + userId + '/tasks').on('value', (snapshot) => {
+            //     const tasks = snapshot.val() || {};
+            //     console.log("Tasks loaded:", Object.keys(tasks).length);
+            // });
+        }
+
+        function clearUserData() {
+            console.log("Clearing user data from UI");
+            // Will be implemented later
+        }
+
+        // ===== HELPER FUNCTIONS =====
+        function validateEmail(email) {
+            const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return re.test(email);
+        }
+
+        // ===== EVENT LISTENERS SETUP =====
+        function setupAuthEventListeners() {
+            console.log("Setting up auth event listeners...");
+            
+            // Login button in header
+            document.getElementById('login-btn').addEventListener('click', () => {
+                document.getElementById('login-modal').classList.add('active');
+            });
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', logout);
+            
+            // Login form submit
+            document.getElementById('login-submit-btn').addEventListener('click', async () => {
+                const email = document.getElementById('login-email').value.trim();
+                const password = document.getElementById('login-password').value;
+                
+                showLoading('login-submit-btn', 'login-spinner', 'login-text');
+                
+                try {
+                    await login(email, password);
+                } catch (error) {
+                    showError('login-error', error.message);
+                } finally {
+                    hideLoading('login-submit-btn', 'login-spinner', 'login-text', 'Login');
+                }
+            });
+            
+            // Sign up form submit
+            document.getElementById('signup-submit-btn').addEventListener('click', async () => {
+                const email = document.getElementById('signup-email').value.trim();
+                const password = document.getElementById('signup-password').value;
+                const confirmPassword = document.getElementById('signup-confirm').value;
+                
+                showLoading('signup-submit-btn', 'signup-spinner', 'signup-text');
+                
+                try {
+                    await signUp(email, password, confirmPassword);
+                } catch (error) {
+                    showError('signup-error', error.message);
+                } finally {
+                    hideLoading('signup-submit-btn', 'signup-spinner', 'signup-text', 'Create Account');
+                }
+            });
+            
+            // Forgot password submit
+            document.getElementById('forgot-submit-btn').addEventListener('click', async () => {
+                const email = document.getElementById('forgot-email').value.trim();
+                
+                showLoading('forgot-submit-btn', 'forgot-spinner', 'forgot-text');
+                
+                try {
+                    await forgotPassword(email);
+                    showSuccess('forgot-success', 'Password reset email sent! Check your inbox.');
+                    document.getElementById('forgot-email').value = '';
+                    
+                    setTimeout(() => {
+                        document.getElementById('forgot-modal').classList.remove('active');
+                    }, 3000);
+                } catch (error) {
+                    showError('forgot-error', error.message);
+                } finally {
+                    hideLoading('forgot-submit-btn', 'forgot-spinner', 'forgot-text', 'Send Reset Link');
+                }
+            });
+            
+            // Modal switching
+            document.getElementById('switch-to-signup').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('login-modal').classList.remove('active');
+                document.getElementById('signup-modal').classList.add('active');
+            });
+            
+            document.getElementById('switch-to-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('signup-modal').classList.remove('active');
+                document.getElementById('login-modal').classList.add('active');
+            });
+            
+            document.getElementById('forgot-password').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('login-modal').classList.remove('active');
+                document.getElementById('forgot-modal').classList.add('active');
+            });
+            
+            document.getElementById('switch-to-login-from-forgot').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('forgot-modal').classList.remove('active');
+                document.getElementById('login-modal').classList.add('active');
+            });
+            
+            // Close modals when clicking X
+            document.querySelectorAll('.modal-close').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.closest('.modal').classList.remove('active');
+                });
+            });
+            
+            // Close modals when clicking outside
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.classList.remove('active');
+                    }
+                });
+            });
+            
+            // Submit on Enter key
+            document.querySelectorAll('.modal input').forEach(input => {
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        const modal = input.closest('.modal');
+                        if (modal.id === 'login-modal') {
+                            document.getElementById('login-submit-btn').click();
+                        } else if (modal.id === 'signup-modal') {
+                            document.getElementById('signup-submit-btn').click();
+                        } else if (modal.id === 'forgot-modal') {
+                            document.getElementById('forgot-submit-btn').click();
+                        }
+                    }
+                });
+            });
+        }
+
+        // ===== INITIALIZATION =====
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM loaded, setting up auth...");
+            setupAuthEventListeners();
+            
+            // Initialize existing app if function exists
+            if (typeof initApp === 'function') {
+                initApp();
+            }
+        });
+
+        console.log("✅ Authentication system ready!");
+    </script>
+
+    <!-- Your App Code -->
+    <script src="app.js"></script>
 </body>
- </html>
-
+</html>
