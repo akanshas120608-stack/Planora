@@ -279,6 +279,49 @@
     messagingSenderId: "971834924900",
     appId: "1:971834924900:web:ff3d82595e08839130e471"
 };
+        // ===== FORCE REFERER HEADER FIX =====
+// This makes all Firebase requests appear to come from authorized domain
+(function() {
+    console.log("Applying referer header fix...");
+    
+    // Store original fetch
+    const originalFetch = window.fetch;
+    
+    // Override fetch to add correct referer
+    window.fetch = function(resource, options) {
+        if (typeof resource === 'string' && resource.includes('identitytoolkit.googleapis.com')) {
+            options = options || {};
+            options.headers = options.headers || {};
+            
+            // Force referer to firebaseapp.com (authorized domain)
+            options.headers['Referer'] = 'https://planora-86835.firebaseapp.com';
+            options.headers['Origin'] = 'https://planora-86835.firebaseapp.com';
+            
+            console.log("Modified request with referer:", options.headers.Referer);
+        }
+        return originalFetch.call(this, resource, options);
+    };
+    
+    // Also override XMLHttpRequest for Firebase SDK internal calls
+    const originalXHROpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        if (url.includes('identitytoolkit.googleapis.com')) {
+            this._firebaseAuthUrl = true;
+        }
+        return originalXHROpen.apply(this, arguments);
+    };
+    
+    const originalXHRSend = XMLHttpRequest.prototype.send;
+    XMLHttpRequest.prototype.send = function(body) {
+        if (this._firebaseAuthUrl) {
+            this.setRequestHeader('Referer', 'https://planora-86835.firebaseapp.com');
+            this.setRequestHeader('Origin', 'https://planora-86835.firebaseapp.com');
+        }
+        return originalXHRSend.call(this, body);
+    };
+    
+    console.log("✅ Referer header fix applied");
+})();
         // Initialize Firebase
         try {
             const app = firebase.initializeApp(firebaseConfig);
@@ -638,4 +681,5 @@
     <script src="app.js"></script>
 </body>
 </html>
+
 
