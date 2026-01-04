@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planora - NEW PROJECT Test</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .test-container {
+            max-width: 500px;
+            width: 100%;
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .badge {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #e0e6ed;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            border-color: #667eea;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .message {
+            padding: 14px;
+            border-radius: 10px;
+            margin-top: 15px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .error {
+            background: #fee;
+            color: #c33;
+            border-left: 4px solid #c33;
+        }
+
+        .success {
+            background: #efe;
+            color: #3c3;
+            border-left: 4px solid #3c3;
+        }
+
+        .switch-mode {
+            text-align: center;
+            margin-top: 20px;
+            color: #7f8c8d;
+        }
+
+        .switch-mode a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .switch-mode a:hover {
+            text-decoration: underline;
+        }
+
+        .user-info {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .user-info h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .user-info p {
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .debug {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 25px;
+            font-size: 13px;
+            color: #666;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e6ed;
+        }
+
+        .debug h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+
+        .debug-line {
+            padding: 4px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .debug-line:last-child {
+            border-bottom: none;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #7f8c8d;
+        }
+
+        .spinner {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <h1><i class="fas fa-rocket"></i> Planora Test</h1>
+        <div class="badge">
+            🆕 BRAND NEW FIREBASE PROJECT
+        </div>
+
+        <div id="loading" class="loading">
+            <i class="fas fa-spinner spinner"></i> Loading Firebase...
+        </div>
+
+        <div id="auth-forms" style="display: none;">
+            <div id="signup-form">
+                <h2 style="color: #2c3e50; margin-bottom: 15px; font-size: 22px;">Create Account</h2>
+                <div class="form-group">
+                    <label for="signup-email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="signup-email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="signup-password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="signup-password" placeholder="Min. 6 characters">
+                </div>
+                <div class="form-group">
+                    <label for="signup-confirm"><i class="fas fa-check-circle"></i> Confirm Password</label>
+                    <input type="password" id="signup-confirm" placeholder="Confirm password">
+                </div>
+                <button id="signup-btn">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+                <div class="switch-mode">
+                    Already have an account? <a href="#" id="show-login">Login</a>
+                </div>
+            </div>
+
+            <div id="login-form" style="display: none;">
+                <h2 style="color: #2c3e50; margin-bottom: 15px; font-size: 22px;">Login</h2>
+                <div class="form-group">
+                    <label for="login-email"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="login-email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label for="login-password"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="login-password" placeholder="Enter password">
+                </div>
+                <button id="login-btn">
+                    <i class="fas fa-sign-in-alt"></i> Login
+                </button>
+                <div class="switch-mode">
+                    Don't have an account? <a href="#" id="show-signup">Sign up</a>
+                </div>
+            </div>
+
+            <div id="message" class="message"></div>
+        </div>
+
+        <div id="user-view" style="display: none;">
+            <div class="user-info">
+                <h2><i class="fas fa-check-circle"></i> Success!</h2>
+                <p>🎉 <strong>IT WORKS!</strong> You're logged in as:<br><strong id="user-email"></strong></p>
+                <button id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+        </div>
+
+        <div class="debug">
+            <h3><i class="fas fa-terminal"></i> Debug Log:</h3>
+            <div id="debug-info">Initializing...</div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        let auth, app;
+
+        function updateDebug(text, isError = false) {
+            const debugEl = document.getElementById('debug-info');
+            const timestamp = new Date().toLocaleTimeString();
+            const color = isError ? '#e74c3c' : '#2c3e50';
+            debugEl.innerHTML += `<div class="debug-line" style="color: ${color}">[${timestamp}] ${text}</div>`;
+            console.log(text);
+            debugEl.scrollTop = debugEl.scrollHeight;
+        }
+
+        function showMessage(text, type = 'error') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = 'message ' + type;
+            messageEl.style.display = 'block';
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+            }, 5000);
+        }
+
+        try {
+            updateDebug('✅ Firebase modules loaded');
+            
+            const firebaseConfig = {
+                apiKey: "AIzaSyCLqhNiiOdYVAPUKKJyQkvs-JHGLCR0K74",
+                authDomain: "planora-test-38d0d.firebaseapp.com",
+                projectId: "planora-test-38d0d",
+                storageBucket: "planora-test-38d0d.firebasestorage.app",
+                messagingSenderId: "62845270738",
+                appId: "1:62845270738:web:d19abd9e052c677ff80b0b"
+            };
+
+            updateDebug('🔥 Initializing NEW Firebase project...');
+            app = initializeApp(firebaseConfig);
+            
+            updateDebug('🔐 Getting Firebase Auth...');
+            auth = getAuth(app);
+            
+            updateDebug('✅ Firebase initialized successfully!');
+            updateDebug('🌐 Project: planora-test-38d0d');
+            updateDebug('🔗 Current URL: ' + window.location.href);
+            
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('auth-forms').style.display = 'block';
+            
+            setupEventListeners();
+            setupAuthListener();
+            
+        } catch (error) {
+            updateDebug('❌ Initialization error: ' + error.message, true);
+            document.getElementById('loading').innerHTML = '<p style="color: red;">Error: ' + error.message + '</p>';
+        }
+
+        function setupEventListeners() {
+            updateDebug('⚙️ Setting up event listeners...');
+            
+            document.getElementById('show-login').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('signup-form').style.display = 'none';
+                document.getElementById('login-form').style.display = 'block';
+            });
+
+            document.getElementById('show-signup').addEventListener('click', (e) => {
+                e.preventDefault();
+                document.getElementById('login-form').style.display = 'none';
+                document.getElementById('signup-form').style.display = 'block';
+            });
+
+            document.getElementById('signup-btn').addEventListener('click', handleSignup);
+            document.getElementById('login-btn').addEventListener('click', handleLogin);
+            document.getElementById('logout-btn').addEventListener('click', () => {
+                signOut(auth);
+                updateDebug('👋 User logged out');
+            });
+        }
+
+        async function handleSignup() {
+            const email = document.getElementById('signup-email').value.trim();
+            const password = document.getElementById('signup-password').value;
+            const confirm = document.getElementById('signup-confirm').value;
+
+            updateDebug('📧 Attempting sign up: ' + email);
+
+            if (!email || !password || !confirm) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            if (password.length < 6) {
+                showMessage('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            if (password !== confirm) {
+                showMessage('Passwords do not match', 'error');
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('signup-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Creating...';
+                
+                updateDebug('🚀 Calling createUserWithEmailAndPassword...');
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                
+                updateDebug('✅ SUCCESS! Account created!', false);
+                updateDebug('👤 User ID: ' + userCredential.user.uid);
+                updateDebug('📧 Email: ' + userCredential.user.email);
+                
+                showMessage('🎉 Account created successfully!', 'success');
+                
+                document.getElementById('signup-email').value = '';
+                document.getElementById('signup-password').value = '';
+                document.getElementById('signup-confirm').value = '';
+                
+            } catch (error) {
+                updateDebug('❌ Sign up error: ' + error.code, true);
+                updateDebug('Error details: ' + error.message, true);
+                
+                let errorMessage = 'Sign up failed: ';
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        errorMessage += 'Email already registered.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage += 'Invalid email.';
+                        break;
+                    case 'auth/weak-password':
+                        errorMessage += 'Password too weak.';
+                        break;
+                    default:
+                        errorMessage += error.message;
+                }
+                showMessage(errorMessage, 'error');
+            } finally {
+                const btn = document.getElementById('signup-btn');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+            }
+        }
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+
+            updateDebug('📧 Attempting login: ' + email);
+
+            if (!email || !password) {
+                showMessage('Please fill in all fields', 'error');
+                return;
+            }
+
+            try {
+                const btn = document.getElementById('login-btn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner spinner"></i> Logging in...';
+                
+                updateDebug('🚀 Calling signInWithEmailAndPassword...');
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                updateDebug('✅ SUCCESS! Logged in!', false);
+                updateDebug('👤 User ID: ' + userCredential.user.uid);
+                
+                showMessage('🎉 Logged in successfully!', 'success');
+                
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                
+            } catch (error) {
+                updateDebug('❌ Login error: ' + error.code, true);
+                
+                let errorMessage = 'Login failed: ';
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage += 'No account with this email.';
+                        break;
+                    case 'auth/wrong-password':
+                    case 'auth/invalid-credential':
+                        errorMessage += 'Incorrect password.';
+                        break;
+                    default:
+                        errorMessage += error.message;
+                }
+                showMessage(errorMessage, 'error');
+            } finally {
+                const btn = document.getElementById('login-btn');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login';
+            }
+        }
+
+        function setupAuthListener() {
+            updateDebug('👂 Auth state listener active');
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    updateDebug('✅ User authenticated: ' + user.email);
+                    document.getElementById('auth-forms').style.display = 'none';
+                    document.getElementById('user-view').style.display = 'block';
+                    document.getElementById('user-email').textContent = user.email;
+                } else {
+                    updateDebug('ℹ️ No user logged in');
+                    document.getElementById('auth-forms').style.display = 'block';
+                    document.getElementById('user-view').style.display = 'none';
+                }
+            });
+        }
+    </script>
+</body>
+</html>
