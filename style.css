@@ -834,3 +834,85 @@ body {
         margin: 10px;
     }
 }
+/* ==== ADD TO YOUR EXISTING style.css ==== */
+
+/* Subject Management Styles */
+.subject-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.subject-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.subject-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.icon-btn {
+    background: #667eea;
+    color: white;
+    border: none;
+    width: 35px;
+    height: 35px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+.icon-btn:hover {
+    transform: translateY(-2px);
+}
+
+.icon-btn.delete {
+    background: #e74c3c;
+}
+
+.icon-btn.delete:hover {
+    background: #c0392b;
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.color-picker input[type="color"] {
+    width: 60px;
+    height: 40px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#color-preview {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    border: 2px solid #e0e0e0;
+}
+
+/* Mobile Swipe Enhancement */
+@media (max-width: 768px) {
+    .days-container {
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .day-card {
+        scroll-snap-align: start;
+    }
+}
