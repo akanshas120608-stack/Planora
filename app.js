@@ -4,8 +4,9 @@ let currentMonth = currentDate.getMonth();
 let currentYear = currentDate.getFullYear();
 let selectedDate = currentDate;
 let currentUserId = null;
+let pendingTaskData = null;
 
-// Default subjects (for new users)
+// Default subjects
 let subjects = [
     { id: 1, name: 'Physics', color: '#4a6fa5' },
     { id: 2, name: 'Chemistry', color: '#e74c3c' },
@@ -29,6 +30,11 @@ let quotes = [
     "Don't watch the clock; do what it does. Keep going."
 ];
 
+// Mobile swipe variables
+let touchStartX = 0;
+let touchEndX = 0;
+let currentDayIndex = 0;
+
 // ==== DOM ELEMENTS ====
 const dateGrid = document.getElementById('date-grid');
 const daysContainer = document.getElementById('days-container');
@@ -41,6 +47,7 @@ const nextMonthBtn = document.getElementById('next-month');
 function initApp() {
     updateCalendar();
     setupEventListeners();
+    setupSwipeGestures();
     console.log('Planora initialized successfully!');
 }
 
@@ -58,7 +65,6 @@ window.loadUserTasks = async function(userId) {
                 ...data
             }));
         } else {
-            // Save default subjects for new user
             await saveSubjectsToFirebase(userId);
         }
         
@@ -70,7 +76,6 @@ window.loadUserTasks = async function(userId) {
             tasks = {};
         }
         
-        // Refresh calendar
         updateCalendar();
     } catch (error) {
         console.error('Error loading user data:', error);
@@ -137,6 +142,107 @@ async function deleteTaskFromFirebase(dateKey, taskId) {
     }
 }
 
+// ==== SUBJECT MANAGEMENT ====
+window.openManageSubjects = function() {
+    if (!currentUserId) {
+        alert('Please sign in to manage subjects');
+        return;
+    }
+    renderSubjectsList();
+    document.getElementById('manage-subjects-modal').classList.add('active');
+};
+
+function renderSubjectsList() {
+    const subjectsList = document.getElementById('subjects-list');
+    subjectsList.innerHTML = '';
+    
+    subjects.forEach(subject => {
+        const subjectItem = document.createElement('div');
+        subjectItem.className = 'subject-list-item';
+        subjectItem.innerHTML = `
+            <div class="subject-info">
+                <div class="subject-color" style="background: ${subject.color}; width: 30px; height: 30px; border-radius: 8px;"></div>
+                <span style="font-weight: 600; color: #2c3e50;">${subject.name}</span>
+            </div>
+            <div class="subject-actions">
+                <button class="icon-btn" onclick="editSubject(${subject.id})">
+                    <i class="fas fa-edit"></i>
+                </button>
+                <button class="icon-btn delete" onclick="deleteSubject(${subject.id})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `;
+        subjectsList.appendChild(subjectItem);
+    });
+}
+
+window.editSubject = function(subjectId) {
+    const subject = subjects.find(s => s.id === subjectId);
+    if (!subject) return;
+    
+    document.getElementById('subject-modal-title').textContent = 'Edit Subject';
+    document.getElementById('subject-name').value = subject.name;
+    document.getElementById('subject-color').value = subject.color;
+    document.getElementById('color-preview').style.background = subject.color;
+    
+    document.getElementById('manage-subjects-modal').classList.remove('active');
+    document.getElementById('subject-modal').classList.add('active');
+    
+    // Store subject ID for saving
+    document.getElementById('save-subject-btn').dataset.editId = subjectId;
+};
+
+window.deleteSubject = async function(subjectId) {
+    if (!confirm('Delete this subject and all its tasks?')) return;
+    
+    subjects = subjects.filter(s => s.id !== subjectId);
+    
+    // Delete all tasks for this subject
+    Object.keys(tasks).forEach(dateKey => {
+        if (tasks[dateKey]) {
+            Object.keys(tasks[dateKey]).forEach(taskId => {
+                if (tasks[dateKey][taskId].subjectId === subjectId) {
+                    delete tasks[dateKey][taskId];
+                }
+            });
+        }
+    });
+    
+    await saveSubjectsToFirebase(currentUserId);
+    await window.dbSet(window.dbRef(window.database, `users/${currentUserId}/tasks`), tasks);
+    
+    renderSubjectsList();
+    updateCalendar();
+};
+
+// ==== MODAL FUNCTIONS ====
+function openAddTaskModal(dateKey, subjectId) {
+    if (!currentUserId) {
+        alert('Please sign in to add tasks');
+        return;
+    }
+    
+    pendingTaskData = { dateKey, subjectId };
+    
+    // Populate subject dropdown
+    const subjectSelect = document.getElementById('task-subject-select');
+    subjectSelect.innerHTML = '';
+    subjects.forEach(subject => {
+        const option = document.createElement('option');
+        option.value = subject.id;
+        option.textContent = subject.name;
+        if (subject.id === subjectId) {
+            option.selected = true;
+        }
+        subjectSelect.appendChild(option);
+    });
+    
+    document.getElementById('task-description').value = '';
+    document.getElementById('add-task-modal').classList.add('active');
+    setTimeout(() => document.getElementById('task-description').focus(), 100);
+}
+
 // ==== CALENDAR FUNCTIONS ====
 function updateCalendar() {
     const monthName = getMonthName(currentMonth);
@@ -166,6 +272,7 @@ function generateDateGrid() {
             currentMonth === today.getMonth() &&
             day === today.getDate()) {
             dateCell.classList.add('active');
+            currentDayIndex = day - 1;
         }
 
         dateCell.innerHTML = `
@@ -191,7 +298,6 @@ function generateDaysView() {
         daysContainer.appendChild(dayCard);
     }
     
-    // Add event listeners after creating all cards
     attachDayCardListeners();
 }
 
@@ -260,23 +366,12 @@ function createDayCard(date, dayNumber) {
         </div>
         <div class="day-quote">"${quotes[quoteIndex]}"</div>
         <div class="subjects-container">
-            ${subjectsHTML || '<p style="color: #7f8c8d; text-align: center;">No tasks for today. Add some below!</p>'}
+            ${subjectsHTML || '<p style="color: #7f8c8d; text-align: center; margin-bottom: 15px;">No tasks for today. Click below to add!</p>'}
         </div>
+        <button class="add-subject-btn" data-date="${dateKey}">
+            <i class="fas fa-plus"></i> Add Task
+        </button>
     `;
-
-    // Add "Add Task" buttons for subjects without tasks
-    subjects.forEach(subject => {
-        const subjectTasks = tasksBySubject[subject.id] || [];
-        if (subjectTasks.length === 0) {
-            const subjectsContainer = dayCard.querySelector('.subjects-container');
-            const addBtn = document.createElement('button');
-            addBtn.className = 'add-task-btn';
-            addBtn.dataset.subjectId = subject.id;
-            addBtn.dataset.date = dateKey;
-            addBtn.innerHTML = `<i class="fas fa-plus"></i> Add ${subject.name} Task`;
-            subjectsContainer.appendChild(addBtn);
-        }
-    });
 
     return dayCard;
 }
@@ -336,42 +431,22 @@ function attachDayCardListeners() {
         button.addEventListener('click', function() {
             const subjectId = parseInt(this.dataset.subjectId);
             const dateKey = this.dataset.date;
-            addNewTask(dateKey, subjectId);
+            openAddTaskModal(dateKey, subjectId);
+        });
+    });
+    
+    // Add subject button (actually opens task modal)
+    document.querySelectorAll('.add-subject-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const dateKey = this.dataset.date;
+            openAddTaskModal(dateKey, subjects[0].id);
         });
     });
 }
 
-async function addNewTask(dateKey, subjectId) {
-    if (!currentUserId) {
-        alert('Please sign in to add tasks');
-        return;
-    }
-    
-    const taskText = prompt('Enter task description:');
-    if (!taskText) return;
-    
-    if (!tasks[dateKey]) {
-        tasks[dateKey] = {};
-    }
-    
-    const taskId = Date.now();
-    const newTask = {
-        id: taskId,
-        subjectId: subjectId,
-        text: taskText,
-        completed: false
-    };
-    
-    tasks[dateKey][taskId] = newTask;
-    const saved = await saveTaskToFirebase(dateKey, newTask);
-    
-    if (saved) {
-        updateCalendar();
-    }
-}
-
 function selectDate(date) {
     selectedDate = date;
+    currentDayIndex = date.getDate() - 1;
 
     document.querySelectorAll('.date-cell').forEach(cell => {
         cell.classList.remove('active');
@@ -383,6 +458,38 @@ function selectDate(date) {
     const dayCard = document.querySelector(`.day-card[data-date="${getDateKey(date)}"]`);
     if (dayCard) {
         dayCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+}
+
+// ==== SWIPE GESTURES (MOBILE) ====
+function setupSwipeGestures() {
+    daysContainer.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    daysContainer.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+}
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+        
+        if (diff > 0 && currentDayIndex < daysInMonth - 1) {
+            // Swipe left - next day
+            currentDayIndex++;
+        } else if (diff < 0 && currentDayIndex > 0) {
+            // Swipe right - previous day
+            currentDayIndex--;
+        }
+        
+        const newDate = new Date(currentYear, currentMonth, currentDayIndex + 1);
+        selectDate(newDate);
     }
 }
 
@@ -403,6 +510,88 @@ function setupEventListeners() {
             currentMonth = 0;
             currentYear++;
         }
+        updateCalendar();
+    });
+    
+    // Save Task Modal
+    document.getElementById('save-task-btn').addEventListener('click', async () => {
+        const description = document.getElementById('task-description').value.trim();
+        const subjectId = parseInt(document.getElementById('task-subject-select').value);
+        
+        if (!description) {
+            alert('Please enter a task description');
+            return;
+        }
+        
+        if (!pendingTaskData) return;
+        
+        const { dateKey } = pendingTaskData;
+        
+        if (!tasks[dateKey]) {
+            tasks[dateKey] = {};
+        }
+        
+        const taskId = Date.now();
+        const newTask = {
+            id: taskId,
+            subjectId: subjectId,
+            text: description,
+            completed: false
+        };
+        
+        tasks[dateKey][taskId] = newTask;
+        const saved = await saveTaskToFirebase(dateKey, newTask);
+        
+        if (saved) {
+            document.getElementById('add-task-modal').classList.remove('active');
+            updateCalendar();
+        }
+    });
+    
+    // Subject Modal
+    document.getElementById('add-new-subject-btn').addEventListener('click', () => {
+        document.getElementById('subject-modal-title').textContent = 'Add New Subject';
+        document.getElementById('subject-name').value = '';
+        document.getElementById('subject-color').value = '#4a6fa5';
+        document.getElementById('color-preview').style.background = '#4a6fa5';
+        delete document.getElementById('save-subject-btn').dataset.editId;
+        
+        document.getElementById('manage-subjects-modal').classList.remove('active');
+        document.getElementById('subject-modal').classList.add('active');
+    });
+    
+    document.getElementById('subject-color').addEventListener('input', (e) => {
+        document.getElementById('color-preview').style.background = e.target.value;
+    });
+    
+    document.getElementById('save-subject-btn').addEventListener('click', async () => {
+        const name = document.getElementById('subject-name').value.trim();
+        const color = document.getElementById('subject-color').value;
+        const editId = document.getElementById('save-subject-btn').dataset.editId;
+        
+        if (!name) {
+            alert('Please enter a subject name');
+            return;
+        }
+        
+        if (editId) {
+            // Edit existing
+            const subject = subjects.find(s => s.id === parseInt(editId));
+            if (subject) {
+                subject.name = name;
+                subject.color = color;
+            }
+        } else {
+            // Add new
+            const newId = subjects.length > 0 ? Math.max(...subjects.map(s => s.id)) + 1 : 1;
+            subjects.push({ id: newId, name, color });
+        }
+        
+        await saveSubjectsToFirebase(currentUserId);
+        
+        document.getElementById('subject-modal').classList.remove('active');
+        document.getElementById('manage-subjects-modal').classList.add('active');
+        renderSubjectsList();
         updateCalendar();
     });
 }
