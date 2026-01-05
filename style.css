@@ -392,6 +392,8 @@ body {
     align-items: center;
     gap: 8px;
     font-weight: 500;
+    width: 100%;
+    justify-content: center;
 }
 
 .add-task-btn:hover, .add-subject-btn:hover {
@@ -413,7 +415,7 @@ body {
     font-size: 20px;
 }
 
-/* ===== MODALS - FIXED ===== */
+/* ===== MODALS ===== */
 .modal {
     display: none;
     position: fixed;
@@ -431,7 +433,6 @@ body {
     transition: opacity 0.3s ease, visibility 0.3s;
 }
 
-/* CRITICAL FIX: This needs !important to override .hidden class */
 .modal.active {
     display: flex !important;
     opacity: 1;
@@ -538,11 +539,21 @@ body {
     transition: all 0.3s;
     width: 100%;
     margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .btn-primary:hover {
     background: linear-gradient(to right, #3a5a8c, #5a83bb);
     transform: translateY(-2px);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .premium-features {
@@ -664,12 +675,10 @@ body {
     border-radius: 5px;
 }
 
-/* Loading spinner */
 .fa-spinner {
     margin-right: 8px;
 }
 
-/* Error messages */
 .error-message {
     background: #ffeaea;
     color: #e74c3c;
@@ -690,7 +699,6 @@ body {
     font-size: 14px;
 }
 
-/* User info in header */
 .user-info {
     display: flex;
     align-items: center;
@@ -719,124 +727,7 @@ body {
     background: rgba(255, 255, 255, 0.3);
 }
 
-/* ===== UTILITY CLASSES - FIXED ===== */
-/* IMPORTANT: .hidden should NOT override .modal.active */
-.hidden {
-    display: none;
-}
-
-/* But make an exception for modals specifically */
-.modal:not(.active).hidden {
-    display: none !important;
-}
-
-.mobile-only {
-    display: none;
-}
-
-/* ===== RESPONSIVE DESIGN ===== */
-@media (max-width: 1200px) {
-    .days-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 900px) {
-    .days-container {
-        grid-template-columns: 1fr;
-    }
-    
-    .header-content {
-        flex-direction: column;
-        gap: 15px;
-        text-align: center;
-    }
-    
-    .banner-content {
-        flex-direction: column;
-        gap: 10px;
-    }
-}
-
-@media (max-width: 768px) {
-    .app-container {
-        padding: 0 15px;
-    }
-    
-    .month-selector {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .date-cell {
-        min-width: 50px;
-        height: 50px;
-    }
-    
-    .date-day {
-        font-size: 18px;
-    }
-    
-    .mobile-only {
-        display: block;
-    }
-    
-    .desktop-only {
-        display: none;
-    }
-    
-    /* Mobile swipe view */
-    .days-container {
-        display: block;
-        overflow-x: hidden;
-        position: relative;
-    }
-    
-    .day-card {
-        margin-bottom: 20px;
-        width: 100%;
-    }
-    
-    .swipe-hint {
-        display: flex !important;
-        justify-content: center;
-        align-items: center;
-    }
-}
-
-@media (max-width: 480px) {
-    .main-header, .premium-banner {
-        padding: 15px;
-    }
-    
-    .logo-container {
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .app-title {
-        font-size: 24px;
-    }
-    
-    .login-prompt {
-        flex-direction: column;
-        gap: 10px;
-        text-align: center;
-    }
-    
-    .footer-links {
-        flex-direction: column;
-        gap: 15px;
-    }
-    
-    .modal-content {
-        max-width: 95%;
-        margin: 10px;
-    }
-}
-/* ==== ADD TO YOUR EXISTING style.css ==== */
-
-/* Subject Management Styles */
+/* ===== SUBJECT MANAGEMENT STYLES ===== */
 .subject-list-item {
     display: flex;
     justify-content: space-between;
@@ -905,14 +796,121 @@ body {
     border: 2px solid #e0e0e0;
 }
 
-/* Mobile Swipe Enhancement */
-@media (max-width: 768px) {
+/* ===== UTILITY CLASSES ===== */
+.hidden {
+    display: none;
+}
+
+.mobile-only {
+    display: none;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1200px) {
     .days-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+    .days-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .header-content {
+        flex-direction: column;
+        gap: 15px;
+        text-align: center;
+    }
+    
+    .banner-content {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-container {
+        padding: 0 15px;
+    }
+    
+    .month-selector {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .date-cell {
+        min-width: 50px;
+        height: 50px;
+    }
+    
+    .date-day {
+        font-size: 18px;
+    }
+    
+    .mobile-only {
+        display: block;
+    }
+    
+    .desktop-only {
+        display: none;
+    }
+    
+    /* MOBILE SWIPE FUNCTIONALITY */
+    .days-container {
+        display: flex;
+        overflow-x: auto;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        scroll-behavior: smooth;
+        grid-template-columns: none;
+    }
+    
+    .days-container::-webkit-scrollbar {
+        display: none;
     }
     
     .day-card {
+        min-width: 100%;
         scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+    
+    .swipe-hint {
+        display: flex !important;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-header, .premium-banner {
+        padding: 15px;
+    }
+    
+    .logo-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .app-title {
+        font-size: 24px;
+    }
+    
+    .login-prompt {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .footer-links {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .modal-content {
+        max-width: 95%;
+        margin: 10px;
     }
 }
