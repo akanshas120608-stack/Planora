@@ -17,6 +17,9 @@
                 <h1 class="app-title">Planora</h1>
             </div>
             <div class="user-section">
+                <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
+                    <i class="fas fa-moon"></i>
+                </button>
                 <div class="login-prompt" id="login-prompt">
                     <i class="fas fa-user"></i>
                     <span>Sign in to save your data</span>
@@ -588,6 +591,37 @@
                     window.openManageSubjects();
                 }
             });
+            
+            // Dark Mode Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Check for saved theme preference or default to light mode
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            html.setAttribute('data-theme', currentTheme);
+            
+            // Update icon based on current theme
+            updateThemeIcon(currentTheme);
+            
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                updateThemeIcon(newTheme);
+            });
+            
+            function updateThemeIcon(theme) {
+                const icon = themeToggle.querySelector('i');
+                if (theme === 'dark') {
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                } else {
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                }
+            }
             
             // Initialize app
             if (typeof initApp === 'function') {
