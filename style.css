@@ -6,11 +6,34 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+:root {
+    --bg-primary: linear-gradient(135deg, #f8fafc 0%, #e8f0f8 100%);
+    --bg-secondary: #ffffff;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --border-color: #e0e6ed;
+    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.08);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+    --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    --bg-secondary: #0f3460;
+    --text-primary: #eaeaea;
+    --text-secondary: #a8a8a8;
+    --border-color: #2d4263;
+    --shadow-sm: 0 5px 15px rgba(0, 0, 0, 0.3);
+    --shadow-md: 0 5px 15px rgba(0, 0, 0, 0.4);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.5);
+}
+
 body {
-    background: linear-gradient(135deg, #f8fafc 0%, #e8f0f8 100%);
+    background: var(--bg-primary);
     min-height: 100vh;
-    color: #2c3e50;
+    color: var(--text-primary);
     line-height: 1.6;
+    transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* ===== HEADER STYLES ===== */
@@ -53,6 +76,26 @@ body {
     display: flex;
     align-items: center;
     gap: 20px;
+}
+
+.theme-toggle {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: all 0.3s;
+}
+
+.theme-toggle:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(20deg) scale(1.1);
 }
 
 .login-prompt {
@@ -887,6 +930,146 @@ body {
 
 .back-to-home:hover {
     text-decoration: underline;
+}
+
+/* ===== DARK MODE STYLES ===== */
+[data-theme="dark"] .month-selector,
+[data-theme="dark"] .date-grid-container,
+[data-theme="dark"] .day-card,
+[data-theme="dark"] .modal-content,
+[data-theme="dark"] .legal-container {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .day-header {
+    border-bottom-color: #2d4263;
+}
+
+[data-theme="dark"] .day-quote {
+    background: #1a1a2e;
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .date-cell {
+    background: #1a1a2e;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .date-cell:hover {
+    background: #2d4263;
+}
+
+[data-theme="dark"] .date-weekday {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .task-text {
+    background: #1a1a2e;
+    border-color: #2d4263;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .task-text:focus {
+    border-color: #4a6fa5;
+}
+
+[data-theme="dark"] .task-completed .task-text {
+    background: #16213e;
+    color: #666;
+}
+
+[data-theme="dark"] .task-item {
+    border-bottom-color: #2d4263;
+}
+
+[data-theme="dark"] .add-task-btn,
+[data-theme="dark"] .add-subject-btn {
+    background: #1a1a2e;
+    border-color: #4a6fa5;
+}
+
+[data-theme="dark"] .add-task-btn:hover,
+[data-theme="dark"] .add-subject-btn:hover {
+    background: #2d4263;
+}
+
+[data-theme="dark"] .subject-list-item {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .premium-features {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .contact-box {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .form-group input,
+[data-theme="dark"] .form-group select,
+[data-theme="dark"] .form-group textarea {
+    background: #1a1a2e;
+    border-color: #2d4263;
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .form-group input:focus,
+[data-theme="dark"] .form-group select:focus {
+    border-color: #4a6fa5;
+}
+
+[data-theme="dark"] .password-requirements {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .auth-switch {
+    border-top-color: #2d4263;
+}
+
+[data-theme="dark"] .swipe-hint {
+    background: #1a1a2e;
+}
+
+[data-theme="dark"] .main-footer {
+    background: #0a0a0a;
+}
+
+[data-theme="dark"] .modal {
+    background: rgba(0, 0, 0, 0.9);
+}
+
+[data-theme="dark"] .day-title,
+[data-theme="dark"] .month-display h2,
+[data-theme="dark"] h1, [data-theme="dark"] h2, [data-theme="dark"] h3, [data-theme="dark"] h4 {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .day-date,
+[data-theme="dark"] .date-range {
+    color: #6a93cb;
+}
+
+[data-theme="dark"] .subject-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] p,
+[data-theme="dark"] li,
+[data-theme="dark"] label {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] strong {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] a {
+    color: #6a93cb;
+}
+
+[data-theme="dark"] .legal-container .last-updated {
+    color: var(--text-secondary);
 }
 
 /* ===== UTILITY CLASSES ===== */
