@@ -288,37 +288,42 @@ header, .app-container, footer {
     padding: 0 30px;
 }
 
-/* ===== MONTH SELECTOR ===== */
+/* ===== MONTH SELECTOR - NOTION STYLE ===== */
 .month-selector {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 25px;
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    margin-bottom: 16px;
+    background: var(--bg-card);
+    padding: 12px 16px;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--border-color);
 }
 
 .nav-btn {
-    background: #f0f5ff;
-    color: #4a6fa5;
-    border: none;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s;
-    font-size: 18px;
+    transition: all 0.2s;
+    font-size: 14px;
 }
 
 .nav-btn:hover {
-    background: #4a6fa5;
-    color: white;
-    transform: scale(1.1);
+    background: rgba(0, 172, 193, 0.08);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
+}
+
+[data-theme="dark"] .nav-btn:hover {
+    background: rgba(100, 255, 218, 0.1);
 }
 
 .month-display {
@@ -326,225 +331,197 @@ header, .app-container, footer {
 }
 
 .month-display h2 {
-    font-size: 32px;
-    color: #2c3e50;
-    margin-bottom: 5px;
+    font-size: 18px;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    font-weight: 600;
 }
 
 .date-range {
-    color: #7f8c8d;
-    font-weight: 500;
+    color: var(--text-secondary);
+    font-weight: 400;
+    font-size: 13px;
 }
 
-/* ===== DATE GRID ===== */
+/* ===== DATE GRID - NOTION STYLE ===== */
 .date-grid-container {
-    background: white;
-    padding: 20px;
-    border-radius: 15px;
-    margin-bottom: 30px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    background: var(--bg-card);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     overflow-x: auto;
+    border: 1px solid var(--border-color);
 }
 
 .date-grid {
     display: flex;
-    gap: 10px;
+    gap: 6px;
     min-width: min-content;
 }
 
 .date-cell {
-    min-width: 60px;
-    height: 60px;
+    min-width: 48px;
+    height: 48px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #f8fafc;
-    border-radius: 10px;
+    background: transparent;
+    border-radius: 6px;
     cursor: pointer;
-    transition: all 0.3s;
-    border: 2px solid transparent;
+    transition: all 0.2s;
+    border: 1px solid transparent;
 }
 
 .date-cell:hover {
-    background: #e8f0f8;
-    transform: translateY(-3px);
+    background: rgba(0, 172, 193, 0.08);
+}
+
+[data-theme="dark"] .date-cell:hover {
+    background: rgba(100, 255, 218, 0.08);
 }
 
 .date-cell.active {
-    background: #4a6fa5;
+    background: var(--accent-primary);
     color: white;
-    border-color: #3a5a8c;
+    border-color: var(--accent-primary);
+}
+
+[data-theme="dark"] .date-cell.active {
+    background: var(--accent-primary);
 }
 
 .date-day {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
 }
 
 .date-weekday {
-    font-size: 12px;
-    color: #7f8c8d;
+    font-size: 11px;
+    color: var(--text-secondary);
     text-transform: uppercase;
+    font-weight: 500;
 }
 
 .date-cell.active .date-weekday {
-    color: rgba(255, 255, 255, 0.8);
+    color: rgba(255, 255, 255, 0.9);
 }
 
-/* ===== DAYS CONTAINER ===== */
+/* ===== DAYS CONTAINER - NOTION STYLE ===== */
 .days-container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 12px;
     margin-bottom: 40px;
 }
 
-/* ===== DAY CARD ===== */
+/* ===== DAY CARD - NOTION STYLE ===== */
 .day-card {
-    background: var(--gradient-card);
-    border-radius: 20px;
-    padding: 30px;
-    box-shadow: var(--shadow-md);
-    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
-    border: 2px solid transparent;
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid var(--border-color);
     position: relative;
-    overflow: hidden;
+    cursor: grab;
 }
 
-.day-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 5px;
-    background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary), var(--accent-tertiary));
-    background-size: 200% 100%;
-    animation: shimmer 3s linear infinite;
+.day-card:active {
+    cursor: grabbing;
 }
 
-@keyframes shimmer {
-    0% { background-position: -200% 0; }
-    100% { background-position: 200% 0; }
+.day-card.dragging {
+    opacity: 0.5;
+    transform: scale(0.98);
 }
 
 @media (min-width: 769px) {
     .day-card:hover {
-        transform: var(--hover-lift) scale(1.02);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         border-color: var(--accent-primary);
     }
-    
-    .day-card:hover::before {
-        height: 8px;
-    }
+}
+
+[data-theme="dark"] .day-card {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .day-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid var(--border-color);
-    position: relative;
-}
-
-.day-header::after {
-    content: '🌊';
-    position: absolute;
-    right: -10px;
-    bottom: -15px;
-    font-size: 24px;
-    opacity: 0.3;
-    animation: wave 2s ease-in-out infinite;
-}
-
-@keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    50% { transform: rotate(20deg); }
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .day-title {
-    font-size: 26px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     color: var(--text-primary);
-    background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
 }
 
 .day-date {
-    font-size: 16px;
-    color: var(--accent-primary);
-    font-weight: 600;
-    padding: 5px 15px;
-    background: rgba(0, 172, 193, 0.1);
-    border-radius: 20px;
-}
-
-[data-theme="dark"] .day-date {
-    background: rgba(100, 255, 218, 0.1);
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 .day-quote {
     font-style: italic;
     color: var(--text-secondary);
-    margin-bottom: 25px;
-    padding: 20px;
-    background: linear-gradient(135deg, rgba(0, 172, 193, 0.05), rgba(255, 213, 79, 0.05));
-    border-radius: 15px;
-    border-left: 4px solid var(--accent-primary);
-    position: relative;
-    overflow: hidden;
-}
-
-.day-quote::before {
-    content: '"';
-    position: absolute;
-    top: -10px;
-    left: 10px;
-    font-size: 60px;
-    opacity: 0.1;
-    font-family: Georgia, serif;
-    color: var(--accent-primary);
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    background: rgba(0, 172, 193, 0.03);
+    border-radius: 4px;
+    border-left: 3px solid var(--accent-primary);
+    font-size: 13px;
+    line-height: 1.5;
 }
 
 [data-theme="dark"] .day-quote {
-    background: linear-gradient(135deg, rgba(100, 255, 218, 0.05), rgba(255, 217, 61, 0.05));
+    background: rgba(100, 255, 218, 0.05);
 }
 
-/* ===== SUBJECTS & TASKS ===== */
+/* ===== SUBJECTS & TASKS - NOTION STYLE ===== */
 .subjects-container {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
 }
 
 .subject-item {
-    margin-bottom: 20px;
+    margin-bottom: 12px;
+    background: rgba(0, 172, 193, 0.02);
+    border-radius: 6px;
+    padding: 8px;
+}
+
+[data-theme="dark"] .subject-item {
+    background: rgba(100, 255, 218, 0.03);
 }
 
 .subject-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 .subject-title {
-    font-size: 18px;
-    font-weight: 700;
-    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .subject-color {
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
 }
 
 .task-list {
@@ -554,78 +531,120 @@ header, .app-container, footer {
 .task-item {
     display: flex;
     align-items: center;
-    padding: 12px 0;
-    border-bottom: 1px dashed #eee;
+    padding: 6px 0;
+    transition: background 0.2s;
+    border-radius: 4px;
+    cursor: move;
 }
 
-.task-item:last-child {
-    border-bottom: none;
+.task-item:hover {
+    background: rgba(0, 172, 193, 0.03);
+}
+
+[data-theme="dark"] .task-item:hover {
+    background: rgba(100, 255, 218, 0.05);
+}
+
+.task-item.dragging {
+    opacity: 0.5;
 }
 
 .task-checkbox {
-    margin-right: 15px;
-    transform: scale(1.3);
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
     cursor: pointer;
+    border-radius: 3px;
 }
 
 .task-text {
     flex: 1;
-    padding: 10px 15px;
-    border: 1px solid #e0e6ed;
-    border-radius: 8px;
-    margin-right: 10px;
-    transition: all 0.3s;
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin-right: 8px;
+    transition: all 0.2s;
+    font-size: 14px;
+    background: transparent;
+    color: var(--text-primary);
+}
+
+.task-text:hover {
+    background: rgba(0, 172, 193, 0.05);
+    border-color: var(--border-color);
 }
 
 .task-text:focus {
-    border-color: #4a6fa5;
+    border-color: var(--accent-primary);
     outline: none;
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .task-text:hover {
+    background: rgba(100, 255, 218, 0.05);
+}
+
+[data-theme="dark"] .task-text:focus {
+    background: rgba(100, 255, 218, 0.08);
 }
 
 .task-completed .task-text {
     text-decoration: line-through;
-    color: #95a5a6;
-    background: #f8fafc;
+    color: var(--text-secondary);
+    opacity: 0.6;
 }
 
 .delete-task {
-    background: #e74c3c;
-    color: white;
+    background: transparent;
+    color: var(--text-secondary);
     border: none;
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
+    opacity: 0;
+}
+
+.task-item:hover .delete-task {
+    opacity: 1;
 }
 
 .delete-task:hover {
-    background: #c0392b;
-    transform: scale(1.1);
+    background: rgba(231, 76, 60, 0.1);
+    color: #e74c3c;
 }
 
 .add-task-btn, .add-subject-btn {
-    background: #e8f4ff;
-    color: #4a6fa5;
-    border: 1px dashed #4a6fa5;
-    padding: 10px 20px;
-    border-radius: 8px;
-    margin-top: 10px;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px dashed var(--border-color);
+    padding: 6px 12px;
+    border-radius: 4px;
+    margin-top: 6px;
     cursor: pointer;
-    transition: all 0.3s;
+    transition: all 0.2s;
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     font-weight: 500;
+    font-size: 13px;
     width: 100%;
     justify-content: center;
 }
 
 .add-task-btn:hover, .add-subject-btn:hover {
-    background: #d4e7ff;
+    background: rgba(0, 172, 193, 0.05);
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+[data-theme="dark"] .add-task-btn:hover, 
+[data-theme="dark"] .add-subject-btn:hover {
+    background: rgba(100, 255, 218, 0.08);
 }
 
 /* ===== SWIPE HINT ===== */
