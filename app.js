@@ -30,9 +30,9 @@ let quotes = [
     "Don't watch the clock; do what it does. Keep going."
 ];
 
-// Mobile swipe variables
-let touchStartX = 0;
-let touchEndX = 0;
+// Mobile swipe variables (removed - causing touch issues)
+// let touchStartX = 0;
+// let touchEndX = 0;
 let currentDayIndex = 0;
 
 // ==== DOM ELEMENTS ====
@@ -47,7 +47,7 @@ const nextMonthBtn = document.getElementById('next-month');
 function initApp() {
     updateCalendar();
     setupEventListeners();
-    setupSwipeGestures();
+    // Removed swipe gestures - was causing mobile touch issues
     console.log('Planora initialized successfully!');
 }
 
@@ -379,7 +379,8 @@ function createDayCard(date, dayNumber) {
 function attachDayCardListeners() {
     // Task checkboxes
     document.querySelectorAll('.task-checkbox').forEach(checkbox => {
-        checkbox.addEventListener('change', async function() {
+        checkbox.addEventListener('change', async function(e) {
+            e.stopPropagation(); // Prevent event bubbling
             const taskId = parseInt(this.dataset.taskId);
             const dateKey = this.dataset.date;
             
@@ -388,10 +389,14 @@ function attachDayCardListeners() {
                 await saveTaskToFirebase(dateKey, tasks[dateKey][taskId]);
                 
                 const taskItem = this.closest('.task-item');
+                const taskText = taskItem.querySelector('.task-text');
+                
                 if (this.checked) {
                     taskItem.classList.add('task-completed');
+                    if (taskText) taskText.style.textDecoration = 'line-through';
                 } else {
                     taskItem.classList.remove('task-completed');
+                    if (taskText) taskText.style.textDecoration = 'none';
                 }
             }
         });
@@ -408,11 +413,21 @@ function attachDayCardListeners() {
                 await saveTaskToFirebase(dateKey, tasks[dateKey][taskId]);
             }
         });
+        
+        // Prevent drag when editing text
+        input.addEventListener('mousedown', (e) => {
+            e.stopPropagation();
+        });
+        
+        input.addEventListener('touchstart', (e) => {
+            e.stopPropagation();
+        });
     });
     
     // Delete buttons
     document.querySelectorAll('.delete-task').forEach(button => {
-        button.addEventListener('click', async function() {
+        button.addEventListener('click', async function(e) {
+            e.stopPropagation();
             const taskId = parseInt(this.dataset.taskId);
             const dateKey = this.dataset.date;
             
@@ -428,20 +443,139 @@ function attachDayCardListeners() {
     
     // Add task buttons
     document.querySelectorAll('.add-task-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
             const subjectId = parseInt(this.dataset.subjectId);
             const dateKey = this.dataset.date;
             openAddTaskModal(dateKey, subjectId);
         });
     });
     
-    // Add subject button (actually opens task modal)
+    // Add subject button
     document.querySelectorAll('.add-subject-btn').forEach(button => {
-        button.addEventListener('click', function() {
+        button.addEventListener('click', function(e) {
+            e.stopPropagation();
             const dateKey = this.dataset.date;
             openAddTaskModal(dateKey, subjects[0].id);
         });
     });
+    
+    // DRAG AND DROP for tasks (desktop only)
+    if (window.innerWidth > 768) {
+        setupTaskDragAndDrop();
+        setupDayCardDragAndDrop();
+    }
+}
+
+// ==== DRAG AND DROP FUNCTIONALITY (Desktop Only) ====
+function setupTaskDragAndDrop() {
+    const taskItems = document.querySelectorAll('.task-item');
+    
+    taskItems.forEach(task => {
+        task.setAttribute('draggable', 'true');
+        
+        task.addEventListener('dragstart', (e) => {
+            // Only allow drag if not clicking on input or button
+            if (e.target.classList.contains('task-text') || 
+                e.target.classList.contains('task-checkbox') ||
+                e.target.classList.contains('delete-task')) {
+                e.preventDefault();
+                return;
+            }
+            
+            task.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        task.addEventListener('dragend', (e) => {
+            task.classList.remove('dragging');
+        });
+    });
+    
+    const taskLists = document.querySelectorAll('.task-list');
+    
+    taskLists.forEach(list => {
+        list.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const dragging = document.querySelector('.task-item.dragging');
+            if (!dragging) return;
+            
+            const afterElement = getDragAfterElement(list, e.clientY);
+            
+            if (afterElement == null) {
+                list.appendChild(dragging);
+            } else {
+                list.insertBefore(dragging, afterElement);
+            }
+        });
+    });
+}
+
+function setupDayCardDragAndDrop() {
+    const dayCards = document.querySelectorAll('.day-card');
+    
+    dayCards.forEach(card => {
+        // Remove default draggable
+        card.removeAttribute('draggable');
+        
+        const header = card.querySelector('.day-header');
+        if (header) {
+            header.style.cursor = 'grab';
+            
+            header.addEventListener('mousedown', (e) => {
+                if (e.target.closest('button') || e.target.closest('input')) return;
+                
+                card.setAttribute('draggable', 'true');
+                header.style.cursor = 'grabbing';
+            });
+            
+            header.addEventListener('mouseup', () => {
+                card.removeAttribute('draggable');
+                header.style.cursor = 'grab';
+            });
+        }
+        
+        card.addEventListener('dragstart', (e) => {
+            card.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        });
+        
+        card.addEventListener('dragend', (e) => {
+            card.classList.remove('dragging');
+            if (header) header.style.cursor = 'grab';
+        });
+    });
+    
+    const container = document.getElementById('days-container');
+    
+    container.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        const dragging = document.querySelector('.day-card.dragging');
+        if (!dragging) return;
+        
+        const afterElement = getDragAfterElement(container, e.clientX);
+        
+        if (afterElement == null) {
+            container.appendChild(dragging);
+        } else {
+            container.insertBefore(dragging, afterElement);
+        }
+    });
+}
+
+function getDragAfterElement(container, position) {
+    const draggableElements = [...container.querySelectorAll('.task-item:not(.dragging), .day-card:not(.dragging)')];
+    
+    return draggableElements.reduce((closest, child) => {
+        const box = child.getBoundingClientRect();
+        const offset = position - box.top - box.height / 2;
+        
+        if (offset < 0 && offset > closest.offset) {
+            return { offset: offset, element: child };
+        } else {
+            return closest;
+        }
+    }, { offset: Number.NEGATIVE_INFINITY }).element;
 }
 
 function selectDate(date) {
@@ -461,37 +595,9 @@ function selectDate(date) {
     }
 }
 
-// ==== SWIPE GESTURES (MOBILE) ====
-function setupSwipeGestures() {
-    daysContainer.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-    });
-
-    daysContainer.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-}
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-        const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
-        
-        if (diff > 0 && currentDayIndex < daysInMonth - 1) {
-            // Swipe left - next day
-            currentDayIndex++;
-        } else if (diff < 0 && currentDayIndex > 0) {
-            // Swipe right - previous day
-            currentDayIndex--;
-        }
-        
-        const newDate = new Date(currentYear, currentMonth, currentDayIndex + 1);
-        selectDate(newDate);
-    }
-}
+// ==== REMOVED SWIPE GESTURES - Was causing mobile touch sensitivity issues ====
+// function setupSwipeGestures() { ... }
+// function handleSwipe() { ... }
 
 // ==== EVENT LISTENERS ====
 function setupEventListeners() {
