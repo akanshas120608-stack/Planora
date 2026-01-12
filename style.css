@@ -589,8 +589,12 @@ header, .app-container, footer {
 }
 
 .task-completed .task-text {
-    text-decoration: line-through;
-    color: var(--text-secondary);
+    text-decoration: line-through !important;
+    color: var(--text-secondary) !important;
+    opacity: 0.6;
+}
+
+.task-completed .task-checkbox {
     opacity: 0.6;
 }
 
@@ -1342,7 +1346,7 @@ header, .app-container, footer {
     /* Optimize mobile performance */
     .days-container {
         grid-template-columns: 1fr;
-        gap: 15px;
+        gap: 12px;
     }
     
     .day-card {
@@ -1353,6 +1357,41 @@ header, .app-container, footer {
     
     .day-card:hover {
         transform: none;
+    }
+    
+    /* Disable drag on mobile - prevents touch sensitivity issues */
+    .day-card,
+    .task-item {
+        -webkit-user-drag: none;
+        -khtml-user-drag: none;
+        -moz-user-drag: none;
+        -o-user-drag: none;
+        user-drag: none;
+        cursor: default !important;
+    }
+    
+    .day-header {
+        cursor: default !important;
+    }
+    
+    /* Better touch targets on mobile */
+    .task-checkbox {
+        width: 20px;
+        height: 20px;
+        min-width: 20px;
+        min-height: 20px;
+    }
+    
+    .delete-task {
+        width: 32px;
+        height: 32px;
+        opacity: 1;
+    }
+    
+    .add-task-btn,
+    .add-subject-btn {
+        padding: 10px 12px;
+        font-size: 14px;
     }
 }
 
